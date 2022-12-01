@@ -1,0 +1,14 @@
+sudo: required
+language: generic
+branches:
+  only:
+    - master
+services:
+  - docker
+  before_install:
+    - echo "start Creating an image with dockerfile"
+    - docker build -t konduck196/docker-react-app -f Dockerfile.dev .
+  scripts:
+    - docker run -e CI=true konduck196/docker-react-app npm run test -- --coverage
+  after_success:
+    - echo "Test success"
