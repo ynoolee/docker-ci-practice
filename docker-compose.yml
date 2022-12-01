@@ -1,0 +1,27 @@
+version: "3"
+services:
+  # services 내부에 컨테이너들을 명시한다
+  # container 이름
+  react:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # volume 을 통해 참조하는 파일에서 제외
+      - /usr/src/app/node_modules
+      # volume 을 통해 계속해서 참조하는 파일들이 들어있는 디렉토리
+      - ./:/usr/src/app
+    # react 의 경우만 설정
+    stdin_open: true 
+
+  # add extra container for test
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /usr/src/app/node_modules
+      - ./:/usr/src/app
+    command: ["npm", "run", "test"]
