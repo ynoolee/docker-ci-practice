@@ -14,5 +14,7 @@ RUN npm run buil
 # CMD 는 하나의 도커 파일당 한 번만 사용가능하다고 하는데 RUN 은 여러번 쓸 수 있는 듯 하다 
 
 FROM nginx
+# 컨테이너에서 매핑할 네트워크 포트를 여기서 정의해준다
+EXPOSE 80
 # COPY 할 파일들은 builder stage 에서 /usr/src/app/build 라는 위치에 있는 것들이고 -> 이거를 ~~ 위치로 COPY
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
