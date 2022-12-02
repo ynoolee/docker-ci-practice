@@ -8,5 +8,22 @@ before_install:
   - docker build -t konduck196/docker-react-app -f Dockerfile.dev .
 scripts:
   - docker run -e CI=true konduck196/docker-react-app npm run test -- --coverage
-after_success:
-  - echo "Test success"
+
+deploy:
+  # travis -> 어떤 서비스로 제공해 줄지. 직므은 elasticbeanstalk 로 제공할 것이지만, s3, firebase 등등이 될 수 있다
+  provider: elasticbeanstalk
+  # region : 현재 사용하고 있는 aws 의 서비스가 위치하고 있는 물리적 장소 
+  region: "ap-northeast-2"
+  # app : 생성된 어플리케이션 이름
+  app: "docker-react-app"
+  # env : 생략할 경우 app 이름에 env 만 붙게 된다 
+  env: "Dockerreactapp-env"
+  # bucket_name : aws 서비스 중 s3 의 버킷 네임을 명시해야 한다 
+  bucket_name: $BUCKET_NAME
+  # -- 왜 s3 를 사용하지 ? Travis CI --> travis 에서 가지고 있는 파일을 압축해서 S3 에 보낸다 --> S3 
+  # -- s3 를 직접 명시적으로 생성하지 않아도 된다. elastic beanstalk 는 어떤 "환경" 이라 했었는데, 이를 생성하면서 자동적으로 s3 도 함깨 생성이 된다 
+  bucker_path: "docker-react-app"
+  on:
+    branch: master
+access_key_id: $AWS_ACCESS_KEY
+secret_access_key: $AWS_SECRET_ACCESS_KEY
